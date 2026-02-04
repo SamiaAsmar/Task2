@@ -1,13 +1,26 @@
 'use client'
 
 import { RequirePermission } from '@/@core/middleware'
+import {  Typography, Paper } from '@mui/material'
+
 export default function AdminTestPage() {
   return (
     <RequirePermission requiredPermissions={['admin_access']}>
-      <div style={{ padding: 24 }}>
-        <h1>Admin Test Page</h1>
-        <p>Only users with admin role can see this page.</p>
-      </div>
+      <Paper
+        elevation={3}
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        <Typography variant="h4" gutterBottom>
+          Admin Test Page
+        </Typography>
+        <Typography variant="body1" color="text.secondary">
+          Only users with admin role can see this page.
+        </Typography>
+      </Paper>
     </RequirePermission>
   )
 }
