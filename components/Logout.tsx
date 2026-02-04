@@ -1,25 +1,28 @@
 'use client'
 
-import { Button, Box } from '@mui/material'
+import { Stack, IconButton, Tooltip } from '@mui/material'
 import { useAuth } from '@/@core/context/AuthContext'
 import { useRouter } from 'next/navigation'
+import { LogOut } from 'lucide-react'
 
 export const Logout = () => {
   const { logout, user } = useAuth()
   const router = useRouter()
 
   const handleLogout = () => {
+    router.replace('/login')
     logout()
-    router.push('/login')
   }
 
   if (!user) return null
 
   return (
-    <Box display='flex' justifyContent='flex-end' p={2}>
-      <Button variant='outlined' onClick={handleLogout} size='small' color='error'>
-        Logout
-      </Button>
-    </Box>
+    <Stack direction='row' justifyContent='flex-end' p={2}>
+      <Tooltip title='Logout' arrow>
+        <IconButton onClick={handleLogout} size='small' color='error'>
+          <LogOut size={22} />
+        </IconButton>
+      </Tooltip>
+    </Stack>
   )
 }

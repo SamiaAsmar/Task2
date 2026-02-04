@@ -1,5 +1,5 @@
 import { useAuth } from '@/@core/context/AuthContext'
-import { Note } from '@/app/types/note'
+import { Note } from '@/@core/types/note'
 
 type AclProps = {
   permission: string

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { initWorker } from '@/app/mocksApi/browser'
+import { initWorker } from '@/@core/mocksApi/browser'
 import { SettingsProvider } from '@/@core/context/SettingsContext'
 import ThemeComponent from '@/@core/theme/ThemeComponent'
 import I18nProvider from '@/providers/I18nProvider'
@@ -26,12 +26,17 @@ function ThemedProviders({ children, client }: { children: React.ReactNode; clie
 
 export default function AppProviders({ children }: { children: React.ReactNode }) {
   const [client] = useState(() => new QueryClient())
+  const [workerReady, setWorkerReady] = useState(false)
 
   useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
-      initWorker() 
+      initWorker().then(() => setWorkerReady(true))
+    } else {
+      setWorkerReady(true)
     }
   }, [])
+
+  if (!workerReady) return <Spinner />
 
   return (
     <AuthProvider>

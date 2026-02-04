@@ -5,8 +5,6 @@ import AppProviders from '@/providers/AppProviders'
 import { NotesProvider } from '@/@core/context/NotesContext'
 import { Toaster } from 'react-hot-toast'
 import { AuthProvider } from '@/@core/context/AuthContext'
-import { Logout } from '@/components/Logout'
-
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -20,8 +18,8 @@ const cairo = Cairo({
   weight: ['300', '400', '500', '600', '700']
 })
 export const metadata: Metadata = {
-  title: 'Shortcut Nextjs Template',
-  description: 'Stop starting projects from scratch, start in the middle and save time!'
+  title: 'Team Note-Board',
+  description: 'Team Note Board'
 }
 
 export default async function RootLayout({
@@ -34,11 +32,10 @@ export default async function RootLayout({
       <body className={`${poppins.variable} ${cairo.variable} antialiased`}>
         <AppProviders>
           <AuthProvider>
-          <NotesProvider>
-          <Logout/>
-          {children}
-          <Toaster position="top-center" reverseOrder={false} />
-          </NotesProvider>
+            <NotesProvider>
+              {children}
+              <Toaster position='top-center' reverseOrder={false} />
+            </NotesProvider>
           </AuthProvider>
         </AppProviders>
       </body>

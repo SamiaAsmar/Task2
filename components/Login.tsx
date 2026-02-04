@@ -1,4 +1,5 @@
 'use client'
+
 import React, { useState } from 'react'
 import {
   Avatar,
@@ -12,13 +13,15 @@ import {
   MenuItem,
   Select,
   InputLabel,
-  FormControl
+  FormControl,
+  Stack
 } from '@mui/material'
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
-import toast from 'react-hot-toast'
 import { useAuth } from '@/@core/context/AuthContext'
 import { useRouter } from 'next/navigation'
 import axios from 'axios'
+import toast from 'react-hot-toast'
+import { Home } from 'lucide-react' // Lucide home icon
+import { Lock } from 'lucide-react' // Lucide lock icon
 
 export default function LoginPage() {
   const [form, setForm] = useState({
@@ -49,7 +52,6 @@ export default function LoginPage() {
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         const message = (err.response?.data as { message?: string })?.message || 'Login failed'
-
         toast.error(message)
       } else {
         toast.error('Unexpected error')
@@ -61,6 +63,12 @@ export default function LoginPage() {
     <Container component='main' maxWidth='xs'>
       <CssBaseline />
 
+      <Stack direction='row' justifyContent='center' sx={{ mt: 2 }}>
+        <Button onClick={() => router.push('/')} color='primary' variant='contained' endIcon={<Home size={16} />}>
+          Back to Notes
+        </Button>
+      </Stack>
+
       <Paper
         elevation={6}
         sx={{
@@ -70,7 +78,7 @@ export default function LoginPage() {
         }}
       >
         <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
-          <LockOutlinedIcon />
+          <Lock />
         </Avatar>
 
         <Typography component='h1' variant='h5'>
@@ -118,11 +126,10 @@ export default function LoginPage() {
               <MenuItem value=''>Select Role</MenuItem>
               <MenuItem value='admin'>Admin</MenuItem>
               <MenuItem value='member'>Member</MenuItem>
-              <MenuItem value='viewer'>Viewer</MenuItem>
             </Select>
           </FormControl>
 
-          <Button type='submit' fullWidth variant='contained'>
+          <Button type='submit' fullWidth variant='contained' sx={{ mt: 2 }}>
             Sign In
           </Button>
         </Box>

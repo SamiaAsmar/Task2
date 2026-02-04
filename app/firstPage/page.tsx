@@ -1,11 +1,12 @@
-import NoteCard from '@/components/NoteCard'
-import React from 'react'
+'use client'
 
-function page() {
+import NoteBoard from '@/components/NoteCard'
+import { RequirePermission } from '@/@core/middleware'
+
+export default function Page() {
   return (
-    <div>
-      <NoteCard />
-    </div>
+    <RequirePermission requiredPermissions={['create_note', 'update_note']}>
+      <NoteBoard />
+    </RequirePermission>
   )
 }
-export default page

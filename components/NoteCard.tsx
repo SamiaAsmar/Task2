@@ -18,15 +18,17 @@ import {
   IconButton,
   Paper,
   Stack,
-  useTheme
+  useTheme,
+  Tooltip
 } from '@mui/material'
 import { Pencil, Plus, Trash2, StickyNote } from 'lucide-react'
 import toast from 'react-hot-toast'
-import { Note } from '@/app/types/note'
+import { Note } from '@/@core/types/note'
 import { useNotes } from '@/@core/context/NotesContext'
 import { usePermission } from '@/@core/hooks/usePermission'
 import { Acl } from './ACL'
 import { useAuth } from '@/@core/context/AuthContext'
+import { Logout } from './Logout'
 
 export default function NoteBoard() {
   const theme = useTheme()
@@ -97,6 +99,9 @@ export default function NoteBoard() {
   return (
     <Box sx={{ minHeight: '100vh', py: 6 }}>
       <Container maxWidth='lg'>
+        <Stack direction='row' justifyContent='flex-end' mb={3}>
+          <Logout />
+        </Stack>
         <Stack direction='row' justifyContent='space-between' alignItems='center' mb={6}>
           <Box>
             <Typography variant='h4' fontWeight='800' color='text.primary' gutterBottom>
@@ -133,7 +138,7 @@ export default function NoteBoard() {
 
         <Grid container spacing={3}>
           {notes.map(note => (
-            <Grid size={{ xs: 12, sm: 6, md: 4 }} key={note.id}>
+            <Grid size={{ xs: 12, sm: 6, md: 4 }} key={note.id} sx={{ display: 'flex' }}>
               <Card
                 elevation={2}
                 sx={{
@@ -141,6 +146,7 @@ export default function NoteBoard() {
                   flexDirection: 'column',
                   borderColor: 'divider',
                   transition: '0.3s',
+                  flexGrow: 1,
                   '&:hover': {
                     transform: 'translateY(-4px)',
                     boxShadow: '0 12px 24px -10px rgba(0,0,0,0.1)'
@@ -157,30 +163,34 @@ export default function NoteBoard() {
                 </CardContent>
                 <CardActions sx={{ justifyContent: 'flex-end' }}>
                   <Acl permission='update_note' note={note}>
-                    <IconButton
-                      size='small'
-                      onClick={() => handleOpenEdit(note)}
-                      sx={{
-                        color: 'primary.main',
-                        bgcolor: 'primary.50',
-                        '&:hover': { bgcolor: 'primary.100' }
-                      }}
-                    >
-                      <Pencil size={16} />
-                    </IconButton>
+                    <Tooltip title='Edit Note' arrow>
+                      <IconButton
+                        size='small'
+                        onClick={() => handleOpenEdit(note)}
+                        sx={{
+                          color: 'primary.main',
+                          bgcolor: 'primary.50',
+                          '&:hover': { bgcolor: 'primary.100' }
+                        }}
+                      >
+                        <Pencil size={16} />
+                      </IconButton>
+                    </Tooltip>
                   </Acl>
                   <Acl permission='delete_note'>
-                    <IconButton
-                      size='small'
-                      onClick={() => handleDelete(note.id)}
-                      sx={{
-                        color: 'error.main',
-                        bgcolor: 'error.50',
-                        '&:hover': { bgcolor: 'error.100' }
-                      }}
-                    >
-                      <Trash2 size={16} />
-                    </IconButton>
+                    <Tooltip title='Delete Note' arrow>
+                      <IconButton
+                        size='small'
+                        onClick={() => handleDelete(note.id)}
+                        sx={{
+                          color: 'error.main',
+                          bgcolor: 'error.50',
+                          '&:hover': { bgcolor: 'error.100' }
+                        }}
+                      >
+                        <Trash2 size={16} />
+                      </IconButton>
+                    </Tooltip>
                   </Acl>
                 </CardActions>
               </Card>
