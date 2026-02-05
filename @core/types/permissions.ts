@@ -1,24 +1,30 @@
-const ACTIONS = ['create', 'view', 'update', 'delete'] as const
-const ENTITIES = ['note'] as const
+export type Action = 'create' | 'view' | 'update' | 'delete' | 'admin'
+export type Subject = 'note' | 'access'
 
-export const PERMISSIONS = ENTITIES.reduce(
-  (acc, entity) => {
-    ACTIONS.forEach(action => {
-      const key = `${action.toUpperCase()}_${entity.toUpperCase()}`
-      acc[key] = `${action}_${entity}`
-    })
-    return acc
-  },
-  {} as Record<string, string>
-)
+export type Permission = {
+  action: Action
+  subject: Subject
+}
+
+const permission = (action: Action, subject: Subject): Permission => ({
+  action,
+  subject
+})
 
 export const ROLES = {
   ADMIN: 'admin',
   MEMBER: 'member',
   VIEWER: 'viewer'
-}
+} as const
+
 export const ROLE_PERMISSIONS = {
-  [ROLES.ADMIN]: [...Object.values(PERMISSIONS), 'admin_access'],
-  [ROLES.MEMBER]: [PERMISSIONS.VIEW_NOTE, PERMISSIONS.CREATE_NOTE, PERMISSIONS.UPDATE_NOTE],
-  [ROLES.VIEWER]: [PERMISSIONS.VIEW_NOTE]
-}
+  [ROLES.ADMIN]: [
+    permission('create', 'note'),
+    permission('view', 'note'),
+    permission('update', 'note'),
+    permission('delete', 'note'),
+    permission('admin', 'access')
+  ],
+  [ROLES.MEMBER]: [permission('view', 'note'), permission('create', 'note'), permission('update', 'note')],
+  [ROLES.VIEWER]: [permission('view', 'note')]
+} as const

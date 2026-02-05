@@ -1,6 +1,9 @@
 import { http, HttpResponse } from 'msw'
 import Users from '../../mock/Users.json'
-import { User } from '@/@core/configs/authConfig'
+import { User } from '@/@core/types/user'
+
+let mockToken: string | null = null
+let loggedInUser: User | null = null
 
 export const authHandlers = [
   http.post('/api/login', async ({ request }) => {
@@ -24,12 +27,13 @@ export const authHandlers = [
     if (!user) {
       return HttpResponse.json({ message: 'Invalid credentials' }, { status: 401 })
     }
-
-    localStorage.setItem('token', 'fake-jwt-token')
+    mockToken = 'fake-jwt-token'
+    loggedInUser = { id: user.id, name: user.name, email: user.email, role: user.role }
 
     return HttpResponse.json({
-      token: 'fake-jwt-token',
-      user: { id: user.id, name: user.name, email: user.email, role: user.role }
+      token: mockToken,
+      user: loggedInUser,
+      setCookie: 'token=fake-jwt-token; path=/'
     })
   }),
 
@@ -37,16 +41,14 @@ export const authHandlers = [
     const authHeader = request.headers.get('Authorization')
     const token = authHeader?.replace('Bearer ', '')
 
-    if (!token || token !== localStorage.getItem('token')) {
+    if (!token || token !== mockToken) {
       return HttpResponse.json({ message: 'Unauthorized' }, { status: 401 })
     }
 
-    const userStr = localStorage.getItem('loggedInUser')
-    if (!userStr) {
+    if (!loggedInUser) {
       return HttpResponse.json({ message: 'No user logged in' }, { status: 401 })
     }
 
-    const user: User = JSON.parse(userStr)
-    return HttpResponse.json(user)
+    return HttpResponse.json(loggedInUser)
   })
 ]

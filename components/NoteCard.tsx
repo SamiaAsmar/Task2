@@ -36,9 +36,8 @@ export default function NoteBoard() {
   const [openDialog, setOpenDialog] = useState(false)
   const [newNote, setNewNote] = useState({ title: '', description: '' })
   const [currentNote, setCurrentNote] = useState<Note | null>(null)
-  const canCreate = usePermission('create_note')
-  const canEdit = usePermission('update_note')
-  const canDelete = usePermission('delete_note')
+  const canCreate = usePermission({ action: 'create', subject: 'note' })
+
   const { user } = useAuth()
 
   const handleOpenAdd = () => {
@@ -49,7 +48,6 @@ export default function NoteBoard() {
   }
 
   const handleOpenEdit = (note: Note) => {
-    if (!canEdit) return
     setCurrentNote(note)
     setNewNote({ title: note.title, description: note.description })
     setOpenDialog(true)
@@ -88,7 +86,6 @@ export default function NoteBoard() {
   }
 
   const handleDelete = async (id: number) => {
-    if (!canDelete) return
     try {
       await deleteNote(id)
       toast.success('Note deleted successfully')
@@ -111,7 +108,7 @@ export default function NoteBoard() {
               Keep track of your teams thoughts and tasks.
             </Typography>
           </Box>
-          <Acl permission='create_note'>
+          <Acl permission={{ action: 'create', subject: 'note' }}>
             <Button variant='contained' startIcon={<Plus size={18} />} onClick={handleOpenAdd}>
               Create Note
             </Button>
@@ -162,7 +159,7 @@ export default function NoteBoard() {
                   </Typography>
                 </CardContent>
                 <CardActions sx={{ justifyContent: 'flex-end' }}>
-                  <Acl permission='update_note' note={note}>
+                  <Acl permission={{ action: 'update', subject: 'note' }} note={note}>
                     <Tooltip title='Edit Note' arrow>
                       <IconButton
                         size='small'
@@ -177,7 +174,7 @@ export default function NoteBoard() {
                       </IconButton>
                     </Tooltip>
                   </Acl>
-                  <Acl permission='delete_note'>
+                  <Acl permission={{ action: 'delete', subject: 'note' }}>
                     <Tooltip title='Delete Note' arrow>
                       <IconButton
                         size='small'

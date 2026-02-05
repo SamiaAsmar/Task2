@@ -3,13 +3,13 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 import axios from 'axios'
 import { User } from '../types/user'
-import { ROLE_PERMISSIONS } from '../types/permissions'
+import { Permission, ROLE_PERMISSIONS } from '../types/permissions'
 
 type AuthContextType = {
   user: User | null
   token: string | null
   loading: boolean
-  permissions: string[]
+  permissions: Permission[]
   login: (email: string, password: string, role: string) => Promise<void>
   logout: () => void
   fetchUser: () => void
@@ -22,7 +22,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
 
-  const permissions = user ? ROLE_PERMISSIONS[user.role] || [] : []
+  const permissions: Permission[] = user
+    ? [...(ROLE_PERMISSIONS[user.role as keyof typeof ROLE_PERMISSIONS] || [])]
+    : []
 
   const fetchUser = () => {
     const storedToken = localStorage.getItem('token')
@@ -52,6 +54,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     localStorage.setItem('token', token)
     localStorage.setItem('user', JSON.stringify(user))
+    document.cookie = `token=${token}; path=/`
+    document.cookie = `role=${user.role}; path=/`
 
     setToken(token)
     setUser(user)
@@ -63,6 +67,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setToken(null)
     localStorage.removeItem('token')
     localStorage.removeItem('user')
+    document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
+    document.cookie = 'role=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
   }
 
   return (
