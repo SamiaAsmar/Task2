@@ -1,5 +1,5 @@
 export type Action = 'create' | 'view' | 'update' | 'delete' | 'admin'
-export type Subject = 'note' | 'access'
+export type Subject = 'note' | 'access' | 'projects' | 'sections'
 
 export type Permission = {
   action: Action
@@ -23,8 +23,14 @@ export const ROLE_PERMISSIONS = {
     permission('view', 'note'),
     permission('update', 'note'),
     permission('delete', 'note'),
-    permission('admin', 'access')
+    permission('admin', 'access'),
+    permission('view', 'projects')
   ],
-  [ROLES.MEMBER]: [permission('view', 'note'), permission('create', 'note'), permission('update', 'note')],
+  [ROLES.MEMBER]: [
+    permission('view', 'note'),
+    permission('create', 'note'),
+    permission('update', 'note'),
+    permission('view', 'projects')
+  ],
   [ROLES.VIEWER]: [permission('view', 'note')]
 } as const

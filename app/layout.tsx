@@ -2,9 +2,7 @@ import type { Metadata } from 'next'
 import { Poppins, Cairo } from 'next/font/google'
 import './globals.css'
 import AppProviders from '@/providers/AppProviders'
-import { NotesProvider } from '@/@core/context/NotesContext'
 import { Toaster } from 'react-hot-toast'
-import { AuthProvider } from '@/@core/context/AuthContext'
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -31,12 +29,8 @@ export default async function RootLayout({
     <html lang='en' dir='ltr'>
       <body className={`${poppins.variable} ${cairo.variable} antialiased`}>
         <AppProviders>
-          <AuthProvider>
-            <NotesProvider>
-              {children}
-              <Toaster position='top-center' reverseOrder={false} />
-            </NotesProvider>
-          </AuthProvider>
+          {children}
+          <Toaster position='top-center' reverseOrder={false} />
         </AppProviders>
       </body>
     </html>

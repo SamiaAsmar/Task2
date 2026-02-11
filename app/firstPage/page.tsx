@@ -1,6 +1,12 @@
-'use client'
+import React from 'react'
+import WorkspacePage from '../workspace/page'
 
-import NoteBoard from '@/components/NoteCard'
-export default function Page() {
-  return <NoteBoard />
+function page() {
+  return (
+    <div>
+      <WorkspacePage />
+    </div>
+  )
 }
+
+export default page

@@ -9,7 +9,9 @@ import I18nProvider from '@/providers/I18nProvider'
 import HydrationGate from '@/components/HydrationGate'
 import { useSettings } from '@/@core/hooks/useSettings'
 import Spinner from '@/components/loaders/Spinner'
-import { AuthProvider } from '@/@core/context/AuthContext'
+import { Provider } from 'react-redux'
+import { store } from '@/app/store'
+import AuthProvider from './AuthProvider'
 
 function ThemedProviders({ children, client }: { children: React.ReactNode; client: QueryClient }) {
   const { settings } = useSettings()
@@ -39,10 +41,12 @@ export default function AppProviders({ children }: { children: React.ReactNode }
   if (!workerReady) return <Spinner />
 
   return (
-    <AuthProvider>
-      <SettingsProvider>
-        <ThemedProviders client={client}>{children}</ThemedProviders>
-      </SettingsProvider>
-    </AuthProvider>
+    <Provider store={store}>
+      <AuthProvider>
+        <SettingsProvider>
+          <ThemedProviders client={client}>{children}</ThemedProviders>
+        </SettingsProvider>
+      </AuthProvider>
+    </Provider>
   )
 }

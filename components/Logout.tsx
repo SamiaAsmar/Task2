@@ -1,20 +1,21 @@
 'use client'
-
 import { Stack, IconButton, Tooltip } from '@mui/material'
-import { useAuth } from '@/@core/context/AuthContext'
 import { useRouter } from 'next/navigation'
 import { LogOut } from 'lucide-react'
+import toast from 'react-hot-toast'
 
 export const Logout = () => {
-  const { logout, user } = useAuth()
   const router = useRouter()
 
   const handleLogout = () => {
-    router.replace('/login')
-    logout()
-  }
+    localStorage.removeItem('user')
+    localStorage.removeItem('token')
+    document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
+    document.cookie = 'role=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
 
-  if (!user) return null
+    toast.success('Logged out successfully')
+    router.push('/login')
+  }
 
   return (
     <Stack direction='row' justifyContent='flex-end' p={2}>

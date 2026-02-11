@@ -16,12 +16,12 @@ import {
   FormControl,
   Stack
 } from '@mui/material'
-import { useAuth } from '@/@core/context/AuthContext'
 import { useRouter } from 'next/navigation'
-import axios from 'axios'
 import toast from 'react-hot-toast'
-import { Home } from 'lucide-react' // Lucide home icon
-import { Lock } from 'lucide-react' // Lucide lock icon
+import { Home } from 'lucide-react'
+import { Lock } from 'lucide-react'
+import { useAppDispatch, useAppSelector } from '@/@core/hooks/redux'
+import { login } from '../app/features/auth/authSlice'
 
 export default function LoginPage() {
   const [form, setForm] = useState({
@@ -30,7 +30,9 @@ export default function LoginPage() {
     remember: false,
     role: ''
   })
-  const { login } = useAuth()
+  const dispatch = useAppDispatch()
+  const { loading } = useAppSelector(state => state.auth)
+
   const router = useRouter()
 
   const handleChange = (
@@ -46,16 +48,16 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      await login(form.email, form.password, form.role)
-      toast.success('Login Success')
-      router.push('/firstPage')
-    } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
-        const message = (err.response?.data as { message?: string })?.message || 'Login failed'
-        toast.error(message)
+      const resultAction = await dispatch(login({ email: form.email, password: form.password, role: form.role }))
+
+      if (login.fulfilled.match(resultAction)) {
+        toast.success('Login Success')
+        router.push('/firstPage')
       } else {
-        toast.error('Unexpected error')
+        toast.error('Login failed')
       }
+    } catch {
+      toast.error('Unexpected error')
     }
   }
 

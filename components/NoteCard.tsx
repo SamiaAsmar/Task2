@@ -24,21 +24,26 @@ import {
 import { Pencil, Plus, Trash2, StickyNote } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { Note } from '@/@core/types/note'
-import { useNotes } from '@/@core/context/NotesContext'
-import { usePermission } from '@/@core/hooks/usePermission'
 import { Acl } from './ACL'
-import { useAuth } from '@/@core/context/AuthContext'
 import { Logout } from './Logout'
+import { NoteBoardProps } from '@/@core/types/noteProps'
 
-export default function NoteBoard() {
+export default function NoteBoard({
+  user,
+  notes = [],
+  addNote,
+  updateNote,
+  deleteNote,
+  canCreate = true,
+  loading,
+  canUpdate = () => true,
+  canDelete = true
+}: NoteBoardProps) {
   const theme = useTheme()
-  const { notes, addNote, updateNote, deleteNote } = useNotes()
   const [openDialog, setOpenDialog] = useState(false)
   const [newNote, setNewNote] = useState({ title: '', description: '' })
   const [currentNote, setCurrentNote] = useState<Note | null>(null)
-  const canCreate = usePermission({ action: 'create', subject: 'note' })
-
-  const { user } = useAuth()
+  console.log('User in NoteBoard:', user)
 
   const handleOpenAdd = () => {
     if (!canCreate) return
@@ -108,14 +113,18 @@ export default function NoteBoard() {
               Keep track of your teams thoughts and tasks.
             </Typography>
           </Box>
-          <Acl permission={{ action: 'create', subject: 'note' }}>
+          <Acl permission={{ action: 'create', subject: 'note' }} user={user} loading={loading}>
             <Button variant='contained' startIcon={<Plus size={18} />} onClick={handleOpenAdd}>
               Create Note
             </Button>
           </Acl>
         </Stack>
 
-        {notes.length === 0 && (
+        {loading ? (
+          <Typography variant='body1' color='text.secondary' textAlign='center' sx={{ mt: 4 }}>
+            Loading notes...
+          </Typography>
+        ) : notes.length === 0 ? (
           <Paper
             sx={{
               textAlign: 'center',
@@ -131,69 +140,69 @@ export default function NoteBoard() {
               Click Create Note to get started.
             </Typography>
           </Paper>
+        ) : (
+          <Grid container spacing={3}>
+            {notes.map(note => (
+              <Grid size={{ xs: 12, sm: 6, md: 4 }} key={note.id} sx={{ display: 'flex' }}>
+                <Card
+                  elevation={2}
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    borderColor: 'divider',
+                    transition: '0.3s',
+                    flexGrow: 1,
+                    '&:hover': {
+                      transform: 'translateY(-4px)',
+                      boxShadow: '0 12px 24px -10px rgba(0,0,0,0.1)'
+                    }
+                  }}
+                >
+                  <CardContent sx={{ flexGrow: 1 }}>
+                    <Typography variant='h6' fontWeight='700' gutterBottom>
+                      {note.title}
+                    </Typography>
+                    <Typography variant='body2' color='text.secondary' sx={{ lineHeight: 1.6 }}>
+                      {note.description}
+                    </Typography>
+                  </CardContent>
+                  <CardActions sx={{ justifyContent: 'flex-end' }}>
+                    <Acl permission={{ action: 'update', subject: 'note' }} note={note} user={user} loading={loading}>
+                      <Tooltip title='Edit Note' arrow>
+                        <IconButton
+                          size='small'
+                          onClick={() => handleOpenEdit(note)}
+                          sx={{
+                            color: 'primary.main',
+                            bgcolor: 'primary.50',
+                            '&:hover': { bgcolor: 'primary.100' }
+                          }}
+                        >
+                          <Pencil size={16} />
+                        </IconButton>
+                      </Tooltip>
+                    </Acl>
+                    <Acl permission={{ action: 'delete', subject: 'note' }} user={user} loading={loading}>
+                      <Tooltip title='Delete Note' arrow>
+                        <IconButton
+                          size='small'
+                          onClick={() => handleDelete(note.id)}
+                          sx={{
+                            color: 'error.main',
+                            bgcolor: 'error.50',
+                            '&:hover': { bgcolor: 'error.100' }
+                          }}
+                        >
+                          <Trash2 size={16} />
+                        </IconButton>
+                      </Tooltip>
+                    </Acl>
+                  </CardActions>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
         )}
-
-        <Grid container spacing={3}>
-          {notes.map(note => (
-            <Grid size={{ xs: 12, sm: 6, md: 4 }} key={note.id} sx={{ display: 'flex' }}>
-              <Card
-                elevation={2}
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  borderColor: 'divider',
-                  transition: '0.3s',
-                  flexGrow: 1,
-                  '&:hover': {
-                    transform: 'translateY(-4px)',
-                    boxShadow: '0 12px 24px -10px rgba(0,0,0,0.1)'
-                  }
-                }}
-              >
-                <CardContent sx={{ flexGrow: 1 }}>
-                  <Typography variant='h6' fontWeight='700' gutterBottom>
-                    {note.title}
-                  </Typography>
-                  <Typography variant='body2' color='text.secondary' sx={{ lineHeight: 1.6 }}>
-                    {note.description}
-                  </Typography>
-                </CardContent>
-                <CardActions sx={{ justifyContent: 'flex-end' }}>
-                  <Acl permission={{ action: 'update', subject: 'note' }} note={note}>
-                    <Tooltip title='Edit Note' arrow>
-                      <IconButton
-                        size='small'
-                        onClick={() => handleOpenEdit(note)}
-                        sx={{
-                          color: 'primary.main',
-                          bgcolor: 'primary.50',
-                          '&:hover': { bgcolor: 'primary.100' }
-                        }}
-                      >
-                        <Pencil size={16} />
-                      </IconButton>
-                    </Tooltip>
-                  </Acl>
-                  <Acl permission={{ action: 'delete', subject: 'note' }}>
-                    <Tooltip title='Delete Note' arrow>
-                      <IconButton
-                        size='small'
-                        onClick={() => handleDelete(note.id)}
-                        sx={{
-                          color: 'error.main',
-                          bgcolor: 'error.50',
-                          '&:hover': { bgcolor: 'error.100' }
-                        }}
-                      >
-                        <Trash2 size={16} />
-                      </IconButton>
-                    </Tooltip>
-                  </Acl>
-                </CardActions>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
 
         <Dialog
           open={openDialog}
