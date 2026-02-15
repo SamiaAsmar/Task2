@@ -14,7 +14,6 @@ import {
   TextField,
   Stack
 } from '@mui/material'
-import axios from 'axios'
 import { Project } from '@/@core/types/project'
 import toast from 'react-hot-toast'
 import { Plus } from 'lucide-react'
@@ -29,31 +28,27 @@ import {
   fetchSections
 } from '../../features/sections/sectionSlice'
 import { fetchNotesBySection } from '@/app/features/notes/noteSlice'
+import { fetchSingleProject } from '@/app/features/projects/projectSlice'
 
 type Props = {
   params: { projectId: string }
 }
 
 export default function ProjectPage({ params }: Props) {
-  const [project, setProject] = useState<Project | null>(null)
+  const [project] = useState<Project | null>(null)
   const [sectionName, setSectionName] = useState('')
 
   const editingSectionId = useAppSelector(state => state.sections.editingSectionId)
   const editDialogOpen = useAppSelector(selectEditDialogOpen)
   const dispatch = useAppDispatch()
 
-  useEffect(() => {
-    const fetchProject = async () => {
-      try {
-        const res = await axios.get(`/api/projects/${params.projectId}`)
-        setProject(res.data)
-      } catch {
+useEffect(() => {
+    dispatch(fetchSingleProject(params.projectId))
+      .unwrap()
+      .catch(() => {
         toast.error('Failed to load project')
-      }
-    }
-    fetchProject()
-  }, [params.projectId])
-
+      })
+  }, [dispatch, params.projectId])
   useEffect(() => {
     dispatch(fetchSections(Number(params.projectId)))
   }, [dispatch, params.projectId])

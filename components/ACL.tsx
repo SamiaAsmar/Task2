@@ -11,9 +11,7 @@ type AclProps = {
 }
 
 export const Acl = ({ permission, children, project }: AclProps) => {
-  const user = useAppSelector(state => state.auth.user)
-  const loading = useAppSelector(state => state.auth.loading)
-
+const { user, loading } = useAppSelector(state => state.auth)
   if (loading || !user) {
     console.log('ACL: loading or no user')
     return null

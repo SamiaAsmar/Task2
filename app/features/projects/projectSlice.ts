@@ -4,6 +4,7 @@ import { Project } from '@/@core/types/project'
 
 type ProjectsState = {
   projects: Project[]
+  currentProject: Project | null
   loading: boolean
   error: string | null
   selectedProjectId: number | null
@@ -13,6 +14,7 @@ type ProjectsState = {
 
 const initialState: ProjectsState = {
   projects: [],
+  currentProject: null,
   loading: false,
   error: null,
   selectedProjectId: null,
@@ -24,6 +26,13 @@ export const fetchProjects = createAsyncThunk('projects/fetchProjects', async ()
   const res = await axios.get('/api/projects')
   return res.data as Project[]
 })
+export const fetchSingleProject = createAsyncThunk(
+  'projects/fetchSingleProject',
+  async (projectId: string | number) => {
+    const res = await axios.get(`/api/projects/${projectId}`)
+    return res.data as Project
+  }
+)
 
 export const addProject = createAsyncThunk('projects/addProject', async (project: Partial<Project>) => {
   const res = await axios.post('/api/projects', project)
@@ -72,6 +81,18 @@ const projectsSlice = createSlice({
         state.loading = false
         state.error = 'Failed to fetch projects'
       })
+      .addCase(fetchSingleProject.pending, state => {
+      state.loading = true
+      state.error = null
+    })
+    .addCase(fetchSingleProject.fulfilled, (state, action: PayloadAction<Project>) => {
+      state.currentProject = action.payload
+      state.loading = false
+    })
+    .addCase(fetchSingleProject.rejected, (state) => {
+      state.loading = false
+      state.error = 'Failed to load project'
+    })
       .addCase(addProject.pending, state => {
         state.loading = true
       })
@@ -102,5 +123,6 @@ export const selectLoading = (state: { projects: ProjectsState }) => state.proje
 export const selectSelectedProjectId = (state: { projects: ProjectsState }) => state.projects.selectedProjectId
 export const selectEditingProjectId = (state: { projects: ProjectsState }) => state.projects.editingProjectId
 export const selectEditDialogOpen = (state: { projects: ProjectsState }) => state.projects.editDialogOpen
+export const selectCurrentProject = (state: { projects: ProjectsState }) => state.projects.currentProject
 
 export default projectsSlice.reducer

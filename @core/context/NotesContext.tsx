@@ -4,16 +4,6 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import axios from 'axios'
 import { Note } from '@/@core/types/note'
 
-type NotesContextType = {
-  notes: Note[]
-  loading: boolean
-  fetchNotes: () => Promise<void>
-  addNote: (note: Omit<Note, 'id' | 'createdAt'>) => Promise<void>
-  updateNote: (id: number, note: Partial<Omit<Note, 'id' | 'createdAt'>>) => Promise<void>
-  deleteNote: (id: number) => Promise<void>
-}
-
-const NotesContext = createContext<NotesContextType | undefined>(undefined)
 
 export const NotesProvider = ({ children }: { children: ReactNode }) => {
   const [notes, setNotes] = useState<Note[]>([])

@@ -18,9 +18,8 @@ import {
 } from '@mui/material'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
-import { Home } from 'lucide-react'
-import { Lock } from 'lucide-react'
-import { useAppDispatch, useAppSelector } from '@/@core/hooks/redux'
+import { Home, Lock } from 'lucide-react'
+import { useAppDispatch } from '@/@core/hooks/redux'
 import { login } from '../app/features/auth/authSlice'
 
 export default function LoginPage() {
@@ -31,7 +30,6 @@ export default function LoginPage() {
     role: ''
   })
   const dispatch = useAppDispatch()
-  const { loading } = useAppSelector(state => state.auth)
 
   const router = useRouter()
 

@@ -33,19 +33,19 @@ export const login = createAsyncThunk(
   }
 )
 
-export const fetchUser = createAsyncThunk('auth/fetchUser', async () => {
-  const storedToken = localStorage.getItem('token')
-  const storedUser = localStorage.getItem('user')
-
-  if (!storedToken || !storedUser) return { token: null, user: null }
-
-  return { token: storedToken, user: JSON.parse(storedUser) }
-})
-
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
+    loadUserFromStorage: (state) => {
+      const storedToken = localStorage.getItem('token')
+      const storedUser = localStorage.getItem('user')
+
+      if (storedToken && storedUser) {
+        state.token = storedToken
+        state.user = JSON.parse(storedUser)
+      }
+    },
     logout(state) {
       state.user = null
       state.token = null
@@ -68,14 +68,6 @@ const authSlice = createSlice({
         state.loading = false
       })
       .addCase(login.rejected, state => {
-        state.loading = false
-      })
-      .addCase(fetchUser.fulfilled, (state, action: PayloadAction<{ token: string | null; user: User | null }>) => {
-        state.token = action.payload.token
-        state.user = action.payload.user
-        state.permissions = action.payload.user
-          ? [...(ROLE_PERMISSIONS[action.payload.user.role as keyof typeof ROLE_PERMISSIONS] || [])]
-          : []
         state.loading = false
       })
   }
