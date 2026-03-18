@@ -1,0 +1,196 @@
+{
+  "projects": [
+    {
+      "id": 101,
+      "name": "Workspace Platform",
+      "description": "A platform to manage workspaces, teams, and tasks collaboratively.",
+      "owner": "Samia",
+      "ownerId": 1,
+      "sections": [
+        {
+          "id": 201,
+          "name": "Planning",
+          "notes": [
+            {
+              "id": 301,
+              "title": "Define Scope",
+              "description": "List all deliverables",
+              "userId": 1,
+              "sectionId": 201
+            },
+            { "id": 302, "title": "Timeline", "description": "Set project milestones", "userId": 2, "sectionId": 201 },
+            { "id": 303, "title": "Budget", "description": "Estimate costs", "userId": 3, "sectionId": 201 }
+          ]
+        },
+        {
+          "id": 202,
+          "name": "Execution",
+          "notes": [
+            {
+              "id": 304,
+              "title": "Task Assignment",
+              "description": "Assign tasks to team members",
+              "userId": 2,
+              "sectionId": 202
+            },
+            {
+              "id": 305,
+              "title": "Progress Monitoring",
+              "description": "Track milestones and deadlines",
+              "userId": 1,
+              "sectionId": 202
+            },
+            {
+              "id": 306,
+              "title": "Quality Check",
+              "description": "Review deliverables for errors",
+              "userId": 3,
+              "sectionId": 202
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 102,
+      "name": "Task Collaboration",
+      "description": "A tool to help teams collaborate efficiently on tasks and projects.",
+      "owner": "Imad",
+      "ownerId": 2,
+      "sections": [
+        {
+          "id": 203,
+          "name": "Design",
+          "notes": [
+            {
+              "id": 307,
+              "title": "UI Mockups",
+              "description": "Create wireframes and designs",
+              "userId": 1,
+              "sectionId": 203
+            },
+            {
+              "id": 308,
+              "title": "UX Review",
+              "description": "Get feedback from users",
+              "userId": 2,
+              "sectionId": 203
+            },
+            { "id": 309, "title": "Brand Colors", "description": "Define color palette", "userId": 1, "sectionId": 203 }
+          ]
+        },
+        {
+          "id": 204,
+          "name": "Implementation",
+          "notes": [
+            {
+              "id": 310,
+              "title": "Set up Repo",
+              "description": "Initialize Git repository",
+              "userId": 2,
+              "sectionId": 204
+            },
+            {
+              "id": 311,
+              "title": "CI/CD Pipeline",
+              "description": "Configure deployment pipeline",
+              "userId": 3,
+              "sectionId": 204
+            }
+          ]
+        },
+        {
+          "id": 205,
+          "name": "Testing",
+          "notes": [
+            { "id": 312, "title": "Unit Tests", "description": "Write automated tests", "userId": 1, "sectionId": 205 },
+            {
+              "id": 313,
+              "title": "Integration Tests",
+              "description": "Test modules together",
+              "userId": 2,
+              "sectionId": 205
+            },
+            {
+              "id": 314,
+              "title": "User Testing",
+              "description": "Gather feedback from beta users",
+              "userId": 3,
+              "sectionId": 205
+            },
+            {
+              "id": 315,
+              "title": "Bug Fixing",
+              "description": "Resolve issues found during testing",
+              "userId": 1,
+              "sectionId": 205
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 103,
+      "name": "Deployment Automation",
+      "description": "Automating deployment workflows to reduce manual errors and increase efficiency.",
+      "owner": "Hadi",
+      "ownerId": 3,
+      "sections": [
+        {
+          "id": 206,
+          "name": "Research",
+          "notes": [
+            {
+              "id": 316,
+              "title": "Market Analysis",
+              "description": "Study competitors and trends",
+              "userId": 2,
+              "sectionId": 206
+            },
+            {
+              "id": 317,
+              "title": "Feasibility Study",
+              "description": "Check project viability",
+              "userId": 1,
+              "sectionId": 206
+            },
+            {
+              "id": 318,
+              "title": "Tech Stack",
+              "description": "Choose frameworks and tools",
+              "userId": 3,
+              "sectionId": 206
+            }
+          ]
+        },
+        {
+          "id": 207,
+          "name": "Deployment",
+          "notes": [
+            {
+              "id": 319,
+              "title": "Server Setup",
+              "description": "Configure servers and environment",
+              "userId": 2,
+              "sectionId": 207
+            },
+            {
+              "id": 320,
+              "title": "Release v1.0",
+              "description": "Deploy first version of project",
+              "userId": 1,
+              "sectionId": 207
+            },
+            {
+              "id": 321,
+              "title": "Monitoring",
+              "description": "Track system health and logs",
+              "userId": 3,
+              "sectionId": 207
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
